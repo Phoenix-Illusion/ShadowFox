@@ -1,0 +1,56 @@
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Load the dataset
+url = 'https://drive.google.com/uc?export=download&id=1yFuNVPXM5CH6g0TthYKcTGrZCCJo6n8Z'
+df = pd.read_csv(url)
+
+# Verify the column names
+print(df.columns)
+
+# Check the first few rows of the dataset
+print(df.head())
+
+# Distribution of car prices
+sns.histplot(df['Selling_Price'], bins=30)
+plt.title('Distribution of Selling Prices')
+plt.xlabel('Selling Price')
+plt.ylabel('Frequency')
+plt.show()
+
+# Boxplot for categorical features against selling price
+categorical_features = ['Fuel_Type', 'Seller_Type', 'Transmission']
+for feature in categorical_features:
+    plt.figure(figsize=(10, 5))
+    sns.boxplot(x=df[feature], y=df['Selling_Price'])
+    plt.title(f'Selling Price vs {feature}')
+    plt.xlabel(feature)
+    plt.ylabel('Selling Price')
+    plt.show()
+
+import joblib
+
+# Save the model
+joblib.dump(model, 'car_price_predictor.pkl')
+
+# Load the model and make a prediction
+def predict_car_price(features):
+    model = joblib.load('car_price_predictor.pkl')
+    processed_features = preprocessor.transform(features)
+    prediction = model.predict(processed_features)
+    return prediction
+
+# Example usage
+new_car_features = pd.DataFrame({
+    'fuel_type': ['Petrol'],
+    'years_of_service': [5],
+    'showroom_price': [500000],
+    'num_previous_owners': [1],
+    'km_driven': [30000],
+    'seller_type': ['Individual'],
+    'transmission': ['Manual']
+})
+predicted_price = predict_car_price(new_car_features)
+print(f"Predicted Selling Price: {predicted_price[0]}")
+
